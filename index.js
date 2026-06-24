@@ -1,17 +1,23 @@
 const currentDisplay = document.getElementById('current');
 const previousDisplay = document.getElementById('previous');
+const historyList = document.getElementById('historyList');
+const historySidebar = document.getElementById('historySidebar');
 
 let currentInput = '0';
 let previousInput = '';
 let operator = null;
 let shouldResetDisplay = false;
 
-// Сандарды жана чекитти экранга кошуу
+// ТАРЫХТЫ АЧУУ / ЖАБУУ ФУНКЦИЯСЫ
+function toggleHistory() {
+    historySidebar.classList.toggle('open');
+}
+
 function appendNumber(number) {
     if (currentInput === '0' && number !== '.') {
         currentInput = number;
     } else {
-        if (number === '.' && currentInput.includes('.')) return; // Эки жолу чекит койдурбайт
+        if (number === '.' && currentInput.includes('.')) return;
         if (shouldResetDisplay) {
             currentInput = number;
             shouldResetDisplay = false;
@@ -22,7 +28,6 @@ function appendNumber(number) {
     updateDisplay();
 }
 
-// Операторлорду тандоо (+, -, *, /)
 function appendOperator(op) {
     if (operator !== null) calculate();
     previousInput = currentInput;
@@ -31,7 +36,6 @@ function appendOperator(op) {
     updateDisplay();
 }
 
-// Экранды толук тазалоо (C)
 function clearDisplay() {
     currentInput = '0';
     previousInput = '';
@@ -39,7 +43,6 @@ function clearDisplay() {
     updateDisplay();
 }
 
-// Акыркы бир санды өчүрүү (DEL)
 function deleteNumber() {
     if (currentInput.length === 1) {
         currentInput = '0';
@@ -49,7 +52,6 @@ function deleteNumber() {
     updateDisplay();
 }
 
-// Эсептөө логикасы (=)
 function calculate() {
     if (operator === null || shouldResetDisplay) return;
     
@@ -59,28 +61,22 @@ function calculate() {
 
     if (isNaN(prev) || isNaN(current)) return;
 
+    let opSymbol = operator;
+    if (operator === '*') opSymbol = '×';
+    if (operator === '/') opSymbol = '÷';
+
     switch (operator) {
-        case '+':
-            result = prev + current;
+        case '+': result = prev + current; break;
+        case '-': result = prev - current; break;
+        case '*': result = prev * current; break;
+        case '/': 
+            if (current === 0) { result = "Ката"; } else { result = prev / current; } 
             break;
-        case '-':
-            result = prev - current;
-            break;
-        case '*':
-            result = prev * current;
-            break;
-        case '/':
-            if (current === 0) {
-                result = "Ката (0гө бөлүү)";
-            } else {
-                result = prev / current;
-            }
-            break;
-        case '%':
-            result = (prev / 100) * current;
-            break;
-        default:
-            return;
+        default: return;
+    }
+
+    if (result !== "Ката") {
+        addHistoryItem(`${prev} ${opSymbol} ${current}`, result);
     }
 
     currentInput = result.toString();
@@ -90,12 +86,31 @@ function calculate() {
     updateDisplay();
 }
 
-// Экранды жаңылап туруучу функция
 function updateDisplay() {
     currentDisplay.innerText = currentInput;
     if (operator != null) {
-        previousDisplay.innerText = `${previousInput} ${operator}`;
+        let opSymbol = operator;
+        if (operator === '*') opSymbol = '×';
+        if (operator === '/') opSymbol = '÷';
+        previousDisplay.innerText = `${previousInput} ${opSymbol}`;
     } else {
         previousDisplay.innerText = '';
     }
+}
+
+function addHistoryItem(expression, result) {
+    const emptyMsg = document.querySelector('.empty-msg');
+    if (emptyMsg) emptyMsg.remove();
+
+    const item = document.createElement('div');
+    item.classList.add('history-item');
+    item.innerHTML = `
+        <div class="expr">${expression} =</div>
+        <div class="res">${result}</div>
+    `;
+    historyList.insertBefore(item, historyList.firstChild);
+}
+
+function clearHistory() {
+    historyList.innerHTML = '<p class="empty-msg">Азырынча тарых жок...</p>';
 }

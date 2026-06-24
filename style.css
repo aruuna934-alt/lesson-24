@@ -11,19 +11,26 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
-/* Калькулятордун негизги корпусу */
-.calculator {
-    width: 340px;
+/* Калькулятор жана тарыхты кармап турган башкы контейнер */
+.calculator-wrapper {
+    display: flex;
     background-color: #1a2232;
     border-radius: 24px;
-    padding: 24px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     border: 1px solid #2e3b52;
+    overflow: hidden; /* Тарых катылып турганда сыртка чыкпоосу үчүн */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Экран бөлүгү */
+/* Калькулятор корпусу */
+.calculator {
+    width: 340px;
+    padding: 24px;
+}
+
 .display {
     background-color: #0f172a;
     border-radius: 16px;
@@ -34,30 +41,13 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    word-wrap: break-word;
-    word-break: break-all;
 }
 
-.previous-operand {
-    color: #64748b;
-    font-size: 1.1rem;
-    min-height: 24px;
-}
+.previous-operand { color: #64748b; font-size: 1.1rem; min-height: 24px; }
+.current-operand { color: #ffffff; font-size: 2.5rem; font-weight: 600; }
 
-.current-operand {
-    color: #ffffff;
-    font-size: 2.5rem;
-    font-weight: 600;
-}
+.buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
-/* Баскычтардын торчосу (Grid) */
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-
-/* Жалпы кнопкалардын стили */
 .btn {
     background-color: #242f47;
     border: none;
@@ -70,44 +60,92 @@ body {
     transition: all 0.2s ease;
 }
 
-.btn:hover {
-    background-color: #2e3b56;
-    transform: translateY(-2px);
-}
+.btn:hover { background-color: #2e3b56; transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
 
-.btn:active {
-    transform: translateY(0);
+/* Тарыхты ачуучу баскыч */
+.history-toggle {
+    color: #a855f7;
+    background-color: rgba(168, 85, 247, 0.1);
 }
+.history-toggle:hover { background-color: rgba(168, 85, 247, 0.2); }
 
-/* Өзгөчө баскычтардын түстөрү */
-.clear {
-    color: #f43f5e; /* Кызыл */
-    background-color: rgba(244, 63, 94, 0.1);
-}
+.clear { color: #f43f5e; background-color: rgba(244, 63, 94, 0.1); }
 .clear:hover { background-color: rgba(244, 63, 94, 0.2); }
-
-.delete {
-    color: #fbbf24; /* Сары */
-    background-color: rgba(251, 191, 36, 0.1);
-}
+.delete { color: #fbbf24; background-color: rgba(251, 191, 36, 0.1); }
 .delete:hover { background-color: rgba(251, 191, 36, 0.2); }
-
-.operator {
-    color: #3b82f6; /* Көк */
-    background-color: rgba(59, 130, 246, 0.1);
-}
+.operator { color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
 .operator:hover { background-color: rgba(59, 130, 246, 0.2); }
 
-/* Эсептөө (=) жана Ноль (0) баскычтары */
 .equals {
+    grid-column: span 2;
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
 }
 .equals:hover {
     background: linear-gradient(135deg, #2563eb, #1e40af);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.zero {
-    grid-column: span 1; /* Кааласаңыз "span 2" кылып нолду чоңойтуп койсоңуз болот */
+/* КАПТАЛДАГЫ ТАРЫХ БЛОГУ (SIDEBAR) */
+.history-sidebar {
+    width: 0; /* Башында жабык турат */
+    opacity: 0;
+    background-color: #131a26;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease-in-out;
+    border-left: 0 solid #2e3b52;
+}
+
+/* Тарых ачылганда ушул класс кошулат */
+.history-sidebar.open {
+    width: 280px;
+    opacity: 1;
+    padding: 24px;
+    border-left: 1px solid #2e3b52;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2e3b52;
+}
+
+.btn-clear-history {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+.btn-clear-history:hover { color: #f43f5e; }
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.history-item {
+    background-color: #1a2232;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: right;
+    border-right: 4px solid #a855f7;
+}
+
+.history-item .expr { color: #94a3b8; font-size: 0.85rem; margin-bottom: 4px; }
+.history-item .res { color: #10b981; font-weight: bold; font-size: 1.15rem; }
+.empty-msg { color: #64748b; text-align: center; margin-top: 50px; font-size: 0.9rem; }
+
+/* ТЕЛЕФОНДОР ҮЧҮН ОҢДОО */
+@media (max-width: 650px) {
+    .calculator-wrapper { flex-direction: column; }
+    .history-sidebar.open { width: 340px; height: 200px; border-left: none; border-top: 1px solid #2e3b52; }
 }
