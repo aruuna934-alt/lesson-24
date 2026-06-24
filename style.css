@@ -14,19 +14,64 @@ body {
     padding: 20px;
 }
 
+/* Башкы Wrapper */
 .calculator-wrapper {
     display: flex;
+    flex-direction: column; /* Эми элементтер вертикалдуу тизилет (Топто Вкладкалар) */
     background-color: #1a2232;
     border-radius: 24px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     border: 1px solid #2e3b52;
     overflow: hidden;
+    width: 340px;
     transition: all 0.4s ease;
 }
 
+/* Эгер тарых ачылса, компьютерде туурасы чоңоюшу үчүн */
+.calculator-wrapper.has-history {
+    width: 620px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* Вкладкалардын баскычтары */
+.tabs {
+    display: flex;
+    width: 100%;
+    background-color: #0f172a;
+    border-bottom: 1px solid #2e3b52;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px;
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    color: #3b82f6;
+    background-color: #1a2232;
+}
+
+/* Баракчалардын ачылып катылуусу */
+.tab-content {
+    display: none;
+    width: 100%;
+}
+
+.tab-content.active {
+    display:block;
+}
+
+/* Калькулятордун ички боштугу */
 .calculator {
-    width: 340px;
-    padding: 24px;
+    padding: 20px;
 }
 
 .display {
@@ -34,7 +79,7 @@ body {
     border-radius: 16px;
     padding: 20px;
     text-align: right;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     min-height: 100px;
     display: flex;
     flex-direction: column;
@@ -42,7 +87,7 @@ body {
 }
 
 .previous-operand { color: #64748b; font-size: 1.1rem; min-height: 24px; }
-.current-operand { color: #ffffff; font-size: 2.5rem; font-weight: 600; }
+.current-operand { color: #ffffff; font-size: 2.3rem; font-weight: 600; }
 
 .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
@@ -51,7 +96,7 @@ body {
     border: none;
     border-radius: 14px;
     color: #f8fafc;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 600;
     padding: 16px;
     cursor: pointer;
@@ -59,9 +104,8 @@ body {
 }
 
 .btn:hover { background-color: #2e3b56; transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
 
-/* Жаңы Инженердик баскычтардын панели */
+/* Инженердик панель */
 .advanced-panel {
     grid-column: span 4;
     display: grid;
@@ -70,40 +114,89 @@ body {
     height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }
 
-/* Инженердик панель ачылганда */
 .advanced-panel.open {
-    height: 65px;
+    height: 55px;
     opacity: 1;
-    margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.adv-btn {
-    background-color: #1e293b;
-    color: #3b82f6;
-    font-size: 1.15rem;
-    padding: 12px;
-}
-.adv-btn:hover { background-color: #2d3748; }
-
+.adv-btn { background-color: #1e293b; color: #3b82f6; font-size: 1.1rem; padding: 10px; }
 .advanced-toggle { color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
-.advanced-toggle:hover { background-color: rgba(59, 130, 246, 0.2); }
 .history-toggle { color: #a855f7; background-color: rgba(168, 85, 247, 0.1); }
-.history-toggle:hover { background-color: rgba(168, 85, 247, 0.2); }
-
 .clear { color: #f43f5e; background-color: rgba(244, 63, 94, 0.1); }
-.clear:hover { background-color: rgba(244, 63, 94, 0.2); }
 .delete { color: #fbbf24; background-color: rgba(251, 191, 36, 0.1); }
-.delete:hover { background-color: rgba(251, 191, 36, 0.2); }
 .operator { color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
-.operator:hover { background-color: rgba(16, 185, 129, 0.2); }
-
 .equals { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
 
-/* КАПТАЛДАГЫ ТАРЫХ БЛОГУ */
+/* ВАЛЮТА ДИЗАЙНЫ */
+.converter-box {
+    padding: 24px;
+    color: white;
+}
+
+.converter-box h3 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #3b82f6;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.input-group input, .input-group select {
+    background-color: #0f172a;
+    border: 1px solid #2e3b52;
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    font-size: 1.1rem;
+    outline: none;
+    width: 100%;
+}
+
+.swap-btn-container {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+.swap-btn {
+    background-color: #242f47;
+    border: none;
+    color: #3b82f6;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.swap-btn:hover { background-color: #2e3b56; }
+
+.result-box {
+    background-color: #0f172a;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    margin-top: 24px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #10b981;
+    border: 1px dashed #10b981;
+}
+
+/* ТАРЫХ SIDEBAR */
 .history-sidebar {
     width: 0;
     opacity: 0;
@@ -116,20 +209,19 @@ body {
 .history-sidebar.open {
     width: 280px;
     opacity: 1;
-    padding: 24px;
+    padding: 20px;
     border-left: 1px solid #2e3b52;
 }
 
-.history-header { display: flex; justify-content: space-between; align-items: center; color: white; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #2e3b52; }
-.btn-clear-history { background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; }
-.btn-clear-history:hover { color: #f43f5e; }
+.history-header { display: flex; justify-content: space-between; align-items: center; color: white; margin-bottom: 15px; }
+.btn-clear-history { background: none; border: none; color: #64748b; cursor: pointer; }
 .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
 .history-item { background-color: #1a2232; padding: 12px; border-radius: 12px; text-align: right; border-right: 4px solid #a855f7; }
-.history-item .expr { color: #94a3b8; font-size: 0.85rem; margin-bottom: 4px; }
-.history-item .res { color: #10b981; font-weight: bold; font-size: 1.15rem; }
-.empty-msg { color: #64748b; text-align: center; margin-top: 50px; font-size: 0.9rem; }
+.history-item .expr { color: #94a3b8; font-size: 0.85rem; }
+.history-item .res { color: #10b981; font-weight: bold; }
+.empty-msg { color: #64748b; text-align: center; margin-top: 50px; }
 
 @media (max-width: 650px) {
-    .calculator-wrapper { flex-direction: column; }
-    .history-sidebar.open { width: 340px; height: 200px; border-left: none; border-top: 1px solid #2e3b52; }
+    .calculator-wrapper.has-history { flex-direction: column; width: 340px; }
+    .history-sidebar.open { width: 100%; height: 200px; border-left: none; border-top: 1px solid #2e3b52; }
 }
